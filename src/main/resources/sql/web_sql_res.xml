@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap SYSTEM "./mapsql.dtd">
+<sqlMap>
+	<sqlUnit name="test2_mgr_list_24197">
+		<sql>select t.id,t.name,t.age from t_test t</sql>
+	</sqlUnit>
+	
+	<sqlUnit name="input_select_page_test">
+		<sql>select t.id,t.name from t_n_menu t [ where t.name like ':name%']</sql>
+	</sqlUnit>
+	
+	<!-- 获取操作ID通过URI -->
+	<sqlUnit name="get_op_auths_byuri">
+	   <sql>
+<!-- 	       select rr.op_auths from t_n_resource t,t_n_role_resource rr where t.id=rr.resource_id and t.uri=:uri and rr.role_id in(:roleIds) -->
+		   SELECT
+				rr.op_auths
+			FROM
+				t_n_resource t,
+				t_n_role_resource rr
+			WHERE
+				t.id = rr.resource_id
+			AND rr.role_id IN (:roleIds)
+			AND rr.op_auths != ""
+	   </sql>
+	</sqlUnit>
+	<!-- 获取项目组职位操作权限 -->
+	<sqlUnit name="get_op_auths_project">
+	   <sql>
+		  SELECT
+			c.op_auths
+		FROM
+			t_n_project_team a,
+			t_n_project_position b,
+			t_n_project_resource c,
+			t_n_project_user d
+		WHERE
+			a.id = b.pro_id
+		AND b.id = c.pro_id
+		AND a.id = d.PROJECT_ID
+		AND b.id = d.position_id
+		AND a.it_id = :itemId
+		AND d.USER_ID = :userId
+	   </sql>
+	</sqlUnit>
+	
+	<!-- 获取操作ID通过URI项目经理 -->
+	<sqlUnit name="get_op_auths_byuri_yes">
+	   <sql>
+	       SELECT
+				project_not
+			FROM
+				t_n_role_user
+			WHERE
+				role_id IN (:roleIds)
+			AND user_id =:userId
+	   </sql>
+	</sqlUnit>
+</sqlMap>
